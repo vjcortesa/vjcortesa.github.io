@@ -6,13 +6,30 @@
         <script type="text/javascript" src="d3.js"></script>
 <style type="text/css">
 		
-			div.bar {
-				display: inline-block;
-				width: 20px;
-				height: 75px;	/* Gets overridden by D3-assigned height below */
-				margin-right: 2px;
-				background-color: teal;
-			}
+			body {
+  font: 10px sans-serif;
+}
+.y.axisRight text {
+    fill: orange;
+}
+.y.axisLeft text {
+    fill: steelblue;
+}
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.bar1 {
+  fill: steelblue;
+}
+.bar2 {
+  fill: orange;
+}
+.x.axis path {
+  display: none;
+}
 		
 		</style>
     </head>
@@ -20,18 +37,9 @@
 
     <body>
 		<script type="text/javascript">
-			var dataset = [ 5, 10, 13, 19, 21, 25, 22, 18, 15, 13,
-							11, 12, 15, 20, 18, 17, 16, 18, 23, 25 ];
-			
-			d3.select("body").selectAll("div")
-				.data(dataset)
-				.enter()
-				.append("div")
-				.attr("class", "bar")
-				.style("height", function(d) {
-					var barHeight = d * 5;
-					return barHeight + "px";
-				});
+			var margin = {top: 80, right: 80, bottom: 80, left: 80},
+    width = 600 - margin.left - margin.right,
+    height = 400 - margin.top - margin.bottom;
 			
 		</script>
 	</body>
