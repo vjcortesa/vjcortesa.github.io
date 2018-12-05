@@ -13,7 +13,16 @@
     		.append("p")
 		.text("New paragraph!");
 var dataset = [ 5, 10, 15, 20, 25 ];
+var rowConverter = function(d) {
+    return {
+        Food: d.Food,  //No conversion
+        Deliciousness: parseFloat(d.Deliciousness)
+    };
+}
 
+d3.csv("food.csv", rowConverter, function(data) {
+    console.log(data);
+});
 d3.csv("food.csv", function(data) {
     console.log(data);
 });
