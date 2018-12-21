@@ -65,6 +65,7 @@
                   .append("svg")
                     .attr("width",  width  + margin.left + margin.right)
                     .attr("height", height + margin.top  + margin.bottom)
+                  //Create a group Element for the Axis elements  
                   .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
@@ -96,6 +97,7 @@
 
                 var updateBars = function(data) {
                     // First update the y-axis domain to match data
+                    
                     yScale.domain( d3.extent(data) );
                     yAxisHandleForUpdate.call(yAxis);
 
