@@ -12,7 +12,7 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-<div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
+<div id="myDiv" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
 <script>
 function makebars() {
   Plotly.d3.csv("RC_E2_data_biomass_grouped_WnW.csv", 
@@ -57,8 +57,7 @@ function Data(allRows) {
       series[tributary[i]+"-"+[arr[j]['Type']]+"-Tons"].push(parseFloat(arr[j]['Tons']).toFixed(2));
       series[tributary[i]+"-"+[arr[j]['Type']]+"-Sdev"].push(parseFloat(arr[j]['Sdev']).toFixed(2));      
     }     
-  }
-  console.log(series);
+  }  
   PlotBars(series);    
 }
 
@@ -72,15 +71,17 @@ function PlotBars(series){
   var layout = {
     //updatemenus: updatemenus,
     //annotations: annotations,
-    width: 660,
-    height: 500,
-  margin: {
-    l: 50,
-    r: 50,
-    b: 100,
-    t: 100,
-    pad: 4
-  },    
+    //width: 660,
+    //height: 500,
+  //margin: {
+    //l: 50,
+    //r: 50,
+    //b: 100,
+    //t: 100,
+    //pad: 4
+  //},  
+    useResizeHandler: true,
+    style: {width: "100%", height: "100%"},    
     legend: {
         xanchor:"left",//"auto" | "left" | "center" | "right"
         yanchor:"auto",//"auto" | "top" | "middle" | "bottom"
@@ -113,8 +114,8 @@ function PlotBars(series){
       title: 'IJssel'
   },
   title:'Total biomass growth along the Dutch Rhine tributaries',
-  width: 0.80 * window.innerWidth,
-  height: 0.80 * window.innerHeight  
+  //width: 0.80 * window.innerWidth,
+  //height: 0.80 * window.innerHeight  
 }
   for (var i=0; i<tributary.length; i++) {
     for (var j=0; j<type.length; j++) {
@@ -155,12 +156,12 @@ function PlotBars(series){
 }
 makebars();
 
-window.onresize = function() {
-  Plotly.relayout(myDiv, {
-    width: 0.80 * window.innerWidth,
-    height: 0.80 * window.innerHeight
-  })
-}
+//window.onresize = function() {
+  ///Plotly.relayout(myDiv, {
+    //width: 0.80 * window.innerWidth,
+    //height: 0.80 * window.innerHeight
+  //})
+//}
 
 //Plotly.newPlot('myDiv', data, layout, {displayModeBar: false});
 
