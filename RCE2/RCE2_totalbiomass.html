@@ -3,8 +3,6 @@
 <style>  
   #myDiv {
     margin: 2.5%; /* From parent width */
-    style="margin-top: -50px;
-    border: 1px solid black;
     justify-content: center;
     align-items: center;
     text-align: center;    
@@ -74,8 +72,15 @@ function PlotBars(series){
   var layout = {
     //updatemenus: updatemenus,
     //annotations: annotations,
-    width: 500,
-    height: 500,    
+    width: 660,
+    height: 500,
+  margin: {
+    l: 50,
+    r: 50,
+    b: 100,
+    t: 100,
+    pad: 4
+  },    
     legend: {
         xanchor:"left",//"auto" | "left" | "center" | "right"
         yanchor:"auto",//"auto" | "top" | "middle" | "bottom"
