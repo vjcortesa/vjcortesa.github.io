@@ -14,15 +14,7 @@
 </head>
 <body>
   <div id="mybtn" style="text-align: center;">
-    <h3>Total biomass growth over the years studied</h3>
-    <div class="custom-control custom-radio custom-control-inline">      
-      <input type="radio" id="customRadioInline1" name="customRadio1" class="custom-control-input" value="whole" onclick="PlotTotal(this)">
-      <label class="custom-control-label" for="customRadioInline1">Plot for the whole Dutch Rhine</label>
-    </div>
-    <div class="custom-control custom-radio custom-control-inline">
-      <input type="radio" id="customRadioInline2" name="customRadio1" class="custom-control-input" value="tributary" checked onclick="PlotTotal(this)">
-      <label class="custom-control-label" for="customRadioInline2">Plot for the main tributaries </label>
-    </div>
+    <h4>Total biomass growth over the years studied</h4>
   </div>   
   <div id="myDiv" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
 <script>
@@ -46,7 +38,6 @@ Array.prototype.groupBy = function(prop) {
 }
 function Data(allRows) {
   //console.log(allRows);
-
   const DataTrib = allRows.groupBy('Tributary');
   const DataType = allRows.groupBy('Type');
   const DataYear = allRows.groupBy('Year');
@@ -82,12 +73,22 @@ function PlotBars(series){
   var dataPlot = [];                                  
   var layout = {
     useResizeHandler: true,//https://codepen.io/nicolaskruchten/pen/ERgBZX
-    style: {width: "100%", height: "100%"},    
+    style: {width: "100%", height: "100%"},
+    annotations: [{      
+      xref: 'paper',
+      yref: 'paper',
+      x: 0.11,
+      xanchor: "left",
+      y: 1.225,
+      yanchor: "bottom",
+      text: 'Vegetation type:',
+      showarrow: false
+    }],    
     legend: {
         xanchor:"left",//"auto" | "left" | "center" | "right"
-        yanchor:"auto",//"auto" | "top" | "middle" | "bottom"
+        yanchor:"bottom",//"auto" | "top" | "middle" | "bottom"
         y:1.2,//number between or equal to -2 and 3
-        x:0.10,//number between or equal to -2 and 3
+        x:0.18,//number between or equal to -2 and 3
         orientation: "h" //"h" | "v"
     },    
     barmode: "stack",
@@ -137,7 +138,7 @@ function PlotBars(series){
         opacity: 0.7,
         legendgroup: colorPlot[j][0],
         showlegend: legend,
-        name: type[j]+' vegetation',         
+        name: type[j],         
         xaxis: 'x'+ axis,        
         barmode: 'stack',
         marker: {color: colorPlot[j][1]}, 
