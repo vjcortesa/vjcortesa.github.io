@@ -1,18 +1,30 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <style>  
-  #myDiv {
-    margin: 2.5%; /* From parent width */
+  #myDiv, #mybtn {
+    margin: 3%; /* From parent width */
     justify-content: center;
     align-items: center;
     text-align: center;    
   }
 </style>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 <head>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-<div id="myDiv" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
+  <div id="mybtn" style="text-align: center;">
+    <h3>Total biomass growth over the years studied</h3>
+    <div class="custom-control custom-radio custom-control-inline">      
+      <input type="radio" id="customRadioInline1" name="customRadio1" class="custom-control-input" value="whole" onclick="PlotTotal(this)">
+      <label class="custom-control-label" for="customRadioInline1">Plot for the whole Dutch Rhine</label>
+    </div>
+    <div class="custom-control custom-radio custom-control-inline">
+      <input type="radio" id="customRadioInline2" name="customRadio1" class="custom-control-input" value="tributary" checked onclick="PlotTotal(this)">
+      <label class="custom-control-label" for="customRadioInline2">Plot for the main tributaries </label>
+    </div>
+  </div>   
+  <div id="myDiv" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
 <script>
 function makebars() {
   Plotly.d3.csv("RC_E2_data_biomass_grouped_WnW.csv", 
@@ -61,31 +73,20 @@ function Data(allRows) {
   PlotBars(series);    
 }
 
-function PlotBars(series){   
-
+function PlotBars(series){
+  //Legend display and color
   var legend = true;
   var colorPlot = [['Woody','#fd8d3c'],
                   ['Non-woody','#74c476']];//Tributary, woody, non-woody
                   
   var dataPlot = [];                                  
   var layout = {
-    //updatemenus: updatemenus,
-    //annotations: annotations,
-    //width: 660,
-    //height: 500,
-  //margin: {
-    //l: 50,
-    //r: 50,
-    //b: 100,
-    //t: 100,
-    //pad: 4
-  //},  
-    useResizeHandler: true,
+    useResizeHandler: true,//https://codepen.io/nicolaskruchten/pen/ERgBZX
     style: {width: "100%", height: "100%"},    
     legend: {
         xanchor:"left",//"auto" | "left" | "center" | "right"
         yanchor:"auto",//"auto" | "top" | "middle" | "bottom"
-        y:1,//number between or equal to -2 and 3
+        y:1.2,//number between or equal to -2 and 3
         x:0.10,//number between or equal to -2 and 3
         orientation: "h" //"h" | "v"
     },    
@@ -112,10 +113,8 @@ function PlotBars(series){
       domain: [0.70, 0.95],
       anchor: 'x3', 
       title: 'IJssel'
-  },
-  title:'Total biomass growth along the Dutch Rhine tributaries',
-  //width: 0.80 * window.innerWidth,
-  //height: 0.80 * window.innerHeight  
+  }
+  //title:'Total biomass growth'    
 }
   for (var i=0; i<tributary.length; i++) {
     for (var j=0; j<type.length; j++) {
@@ -147,23 +146,15 @@ function PlotBars(series){
     }
             
   }
-  console.log(dataPlot);
-  //'myData', "myDiv"
   Plotly.newPlot(
     "myDiv", dataPlot, layout,
     {displayModeBar: false}
   );   
 }
 makebars();
-
-//window.onresize = function() {
-  ///Plotly.relayout(myDiv, {
-    //width: 0.80 * window.innerWidth,
-    //height: 0.80 * window.innerHeight
-  //})
-//}
-
-//Plotly.newPlot('myDiv', data, layout, {displayModeBar: false});
-
+function PlotTotal(button) {
+    var btnvalue = button.value; //
+    console.log(btnvalue);    
+}
 </script>
 </body>
