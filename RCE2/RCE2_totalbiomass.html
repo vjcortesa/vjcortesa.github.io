@@ -14,14 +14,10 @@
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 <body>
-<script src="https://d3js.org/d3.v3.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-
-<div id="myDiv"><!-- Plotly chart will be drawn inside this DIV -->I am in the center</div>
+<div id="myDiv"><!-- Plotly chart will be drawn inside this DIV --></div>
 <script>
 function makebars() {
-  //Plotly.d3.csv("data_biomass_grouped.csv",
-  Plotly.d3.csv("data_biomass_grouped_WnW.csv", 
+  Plotly.d3.csv("RC_E2_data_biomass_grouped_WnW.csv", 
     function(data){ Data(data) } );
 };
 var series = {};
