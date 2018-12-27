@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+ 
+  body {
+    font: 10px sans-serif;
+  }
+   
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+   
+  .bar {
+    fill: steelblue;
+  }
+   
+  .x.axis path {
+    display: none;
+  }
+ 
+</style>
+
+<body>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script>
+  //container size and inner space
+  var margin = {
+    top: 20,
+    right: 20,
+    bottom: 60,
+    left: 40
+  },
+  width = 560 - margin.left - margin.right,
+  height = 360 - margin.top - margin.bottom;
+  //Ordinal for the group scaling elements
+  var x_groups = d3.scale.ordinal()
+  //0.1 padding added to outset the bands
+    .rangeRoundBands([0, width], .1);
+  var x_categories = d3.scale.ordinal();
+  var x_values = d3.scale.ordinal();
+  //svg corner space is inverted along the y axis
+  var y = d3.scale.linear()
+    .range([height, 0]);
+  var color = d3.scale.ordinal()
+    .range(["#98abc5", "#8a89a6", "#7b6888", "#6b486b", "#a05d56", "#d0743c", "#ff8c00", "#000000"]);  
+  var groups_axis = d3.svg.axis()
+    .scale(x_groups)
+    .orient("bottom");
+  var categories_axis = d3.svg.axis()
+    .scale(x_categories)
+    .orient("bottom");
+  var values_axis = d3.svg.axis()
+    .scale(x_categories)
+    .orient("bottom");
+  var yAxis = d3.svg.axis()
+    .scale(y)
+    .orient("left")
+    //.tickFormat(d3.format(".2s"));
+
+
+  var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  var yBegin;
+ 
+  var innerColumns = {
+    "column1" : ["Woody","Non-Woody"]
+  } 
+ 
+  d3.csv("data_biomass_grouped_WnW.csv", function(error, data) {
+    TonsBegin = 0;
+    TonsEnd = 0;
+    var nested = d3.nest()
+      .key(function(d) {
+        return d.Tributary;
+      })
+      .key(function(d) {
+        return d.Year;
+      })
+      .key(function(d) {
+        return d.Type;
+      })
+      .rollup(function(item) {
+        if((item[0]['Type'])=='Woody'){
+          TonsBegin = 0;
+          TonsEnd = item[0]['Tons']; 
+        } else {
+          TonsBegin = TonsEnd;
+          TonsEnd = parseFloat(TonsBegin) + parseFloat(item[0]['Tons']);
+        }       
+        return [{          
+          value: item[0]['Tons'],
+          yBegin: TonsBegin,
+          yEnd: TonsEnd
+        }];
+      })
+      .entries(data);
+    //console.log(JSON.stringify(nested));
+    console.log(nested);
+    //var categories = [Waal, Nedderrijn-Lek, IJssel];  
+    x_groups.domain(nested.map(function(d) {      
+      return d.key;
+    }));
+    //var categories = [1997, 2005, 2008, 2012];
+    var categories = nested[0].values.map(function(d, i) {      
+      return d.key;//1997, 2005, 2008, 2012
+    });
+    //Rangeband is the step to be plotted for the first x scale
+    x_categories.domain(categories).rangeRoundBands([0, x_groups.rangeBand()]);
+    //var values = ['Woody', 'Non-Woody']; 
+    var values = nested[0].values[0].values.map(function(d, i) {            
+      return d.key;//'Woody', 'Non-Woody'
+    });
+    
+    //Rangeband is the step to be plotted for the second x scale
+    //1997, 2005, 2008, 2012
+    x_values.domain(values).rangeRoundBands([0, x_categories.rangeBand()]);
+    color.domain(values);
+    y.domain([0, d3.max(nested, function(d) {
+      return d3.max(d.values, function(d) {
+        //console.log(d.values);
+        return d3.max(d.values, function(d) {
+          return d3.max(d.values, function(d) {       
+            //console.log(d.value);
+            return d.value;
+          })
+        })
+      });
+    })])
+    //d.value = 3953.84705316991
+    svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + (height + 30) + ")")
+      .call(groups_axis);
+
+    svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis)
+      .append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 6)
+      .attr("dy", ".71em")
+      .style("text-anchor", "end")
+      .text("Biomass growth (Tons of dry mass)");
+    
+    var groups_g = svg.selectAll(".group")
+      .data(nested)
+      .enter().append("g")
+      .attr("class", function(d) {
+        //<g class="group group-Waal">
+        return 'group group-' + d.key;
+      })
+      //var categories = [Waal, Nedderrijn-Lek, IJssel];
+      //<g class="group group-Waal" transform="translate(17,0)">
+      .attr("transform", function(d) {
+        //(x_groups(d.key))=17, 178, 339;
+        return "translate(" + x_groups(d.key) + ",0)";
+      });
+    //g class="category category-1997" transform="translate(1,0)">  
+    var categories_g = groups_g.selectAll(".category")
+      .data(function(d) {        
+        return d.values;
+      })
+      .enter().append("g")
+      .attr("class", function(d) {
+        //'category category-' + 1997, 2005, 2008, 2012;
+        return 'category category-' + d.key;
+      })
+      .attr("transform", function(d) {
+        //(x_categories(d.key) = 1, 37, 73, 109);
+        return "translate(" + x_categories(d.key) + ",0)";
+      });
+    
+    var values_g = categories_g.selectAll(".value")
+      .data(function(d) {
+        console.log(d.values);
+        //0 key: "Woody" value: "4722.493913529" yBegin: 0
+        return d.values;
+      })
+      .enter().append("g")
+      .attr("class", function(d) {
+       //value value-Woody or value value-Non-Woody
+        return 'value value-' + d.key;
+      })
+      //translate(0,0) or translate(18,0)
+      .attr("transform", function(d) {
+      //1997, 2005, 2008, 2012
+        console.log(x_values(d.key));        
+        return "translate(" + x_values(d.key) + ",0)";
+      });  
+
+    var rects = values_g.selectAll('.rect')
+      .data(function(d) {
+        //0 key: "Woody" value: "4722.493913529" yBegin: 0        
+        return [d];
+      })
+      .enter().append("rect")
+      .attr("class", "rect")
+      //1997, 2005, 2008, 2012
+      .attr("width", x_values.rangeBand())
+      .attr("x", function(d) {
+        return 0;
+      })
+      .attr("y", function(d) {
+        console.log(d.value)
+        //console.log(d.value)
+        //console.log(d.yEnd)
+        //return y(d.yEnd);
+        return y(d.value);
+      })
+      .attr("height", function(d) {
+        return y(d.yBegin) - y(d.yEnd);  
+        //return height - y(d.value);
+      })
+      .style("fill", function(d) {
+        return color(d.key);
+      });
+  });
+       
+</script>
+</body>

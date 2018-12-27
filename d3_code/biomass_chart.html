@@ -82,12 +82,21 @@ body {
 .stacked-chart .series-yes {
     fill: steelblue;
 }
-
+.stacked-chart .series-nonwoody {
+    fill: steelblue;
+}
 .stacked-chart .series-no {
+    fill: #CCC;
+}
+.stacked-chart .series-woody {
     fill: #CCC;
 }
 
 .stacked-chart .series-maybe {
+    fill: #CD4638;
+}
+
+.stacked-chart .series-total {
     fill: #CD4638;
 }
 
@@ -168,10 +177,11 @@ body {
 "use strict";
 
 /*global $, d3, _ */
-
-var seriesNames = ["Maybe", "No", "Yes"],
+//var seriesNames = ["Maybe", "No", "Yes"],
+var seriesNames = ["Total", "Woody", "NonWoody"],
     numSamples = 22,
     numSeries = seriesNames.length,
+    // Compute the series names ("y1", "y2", etc.) from the loaded CSV.
     data = seriesNames.map(function (name) {
         return {
             name: name,
@@ -179,7 +189,7 @@ var seriesNames = ["Maybe", "No", "Yes"],
         };
     }),
     stack = d3.layout.stack().values(function (d) { return d.values; });
-
+console.log(data);
 stack(data);
 
 var chartMode = "stacked",

@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>  
+  #myDiv {
+    margin: 5%; /* From parent width */
+    style="margin-top: -50px;
+    border: 1px solid black;
+    justify-content: center;
+    align-items: center;
+    text-align: center;    
+  }
+</style>
+<head>
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+
+<div id="myDiv"><!-- Plotly chart will be drawn inside this DIV -->I am in the center</div>
+<script>
+function makebars() {
+  //Plotly.d3.csv("data_biomass_grouped.csv",
+  Plotly.d3.csv("data_biomass_grouped_WnW.csv", 
+    function(data){ Data(data) } );
+};
+var series = {};
+var tributary = [];
+var year = [];
+var type = [];
+
+//Grouping method: https://www.consolelog.io/group-by-in-javascript/
+Array.prototype.groupBy = function(prop) {
+  return this.reduce(function(groups, item) {
+    const val = item[prop]
+    groups[val] = groups[val] || []
+    groups[val].push(item)
+    return groups
+  }, {})
+}
+function Data(allRows) {
+  //console.log(allRows);
+
+  const DataTrib = allRows.groupBy('Tributary');
+  const DataType = allRows.groupBy('Type');
+  const DataYear = allRows.groupBy('Year');
+  tributary = Object.keys(DataTrib);
+  type = Object.keys(DataType);
+  year = Object.keys(DataYear);
+  var arr = [];
+
+  for (var i=0; i<tributary.length; i++) {
+    for (var j=0; j<type.length; j++) {      
+      series[tributary[i]+"-"+type[j]+"-Year"] = [];
+      series[tributary[i]+"-"+type[j]+"-Tons"] = [];
+      series[tributary[i]+"-"+type[j]+"-Sdev"] = [];
+    }
+  } 
+  for (var i=0; i<tributary.length; i++) {
+    arr = DataTrib[tributary[i]];
+    for (var j=0; j<arr.length; j++) {
+      series[tributary[i]+"-"+[arr[j]['Type']]+"-Year"].push(arr[j]['Year']);
+      series[tributary[i]+"-"+[arr[j]['Type']]+"-Tons"].push(parseFloat(arr[j]['Tons']).toFixed(2));
+      series[tributary[i]+"-"+[arr[j]['Type']]+"-Sdev"].push(parseFloat(arr[j]['Sdev']).toFixed(2));      
+    }     
+  }
+  console.log(series);
+  PlotBars(series);    
+}
+
+function PlotBars(series){   
+
+  var legend = true;
+  var colorPlot = [['Woody','#fd8d3c'],
+                  ['Non-woody','#74c476']];//Tributary, woody, non-woody
+                  
+  var dataPlot = [];                                  
+  var layout = {
+    //updatemenus: updatemenus,
+    //annotations: annotations,    
+    legend: {
+        xanchor:"left",//"auto" | "left" | "center" | "right"
+        yanchor:"auto",//"auto" | "top" | "middle" | "bottom"
+        y:1,//number between or equal to -2 and 3
+        x:0.10,//number between or equal to -2 and 3
+        orientation: "h" //"h" | "v"
+    },    
+    barmode: "stack",
+    yaxis: {
+      tickformat: '~s',//~s = 20000
+      hoverformat: '.2f',//2 values after the decimal point on hover
+      title: 'Tons of dry mass +/- standard deviation'
+    },
+    xaxis: {
+      type: 'category',
+      domain: [0.1, 0.25],
+      anchor: 'x1',       
+      title: 'Waal'
+    },
+    xaxis2: {
+      type: 'category',
+      domain: [0.4, 0.55],
+      anchor: 'x2', 
+      title: 'Nederrijn-Lek'
+    },
+    xaxis3: {
+      type: 'category',
+      domain: [0.70, 0.85],
+      anchor: 'x3', 
+      title: 'IJssel'
+  },
+  title:'Total biomass growth along the Dutch Rhine tributaries',
+  width: 0.75 * window.innerWidth,
+  height: 0.75 * window.innerHeight  
+}
+  for (var i=0; i<tributary.length; i++) {
+    for (var j=0; j<type.length; j++) {
+      if (i<1) {
+        legend = true;//Only for the first tributary 
+      } else {
+        legend = false;
+      }     
+      console.log(series[tributary[i]+"-"+type[j]+"-Sdev"])
+      var axis = i+1;
+      var temp = {
+        x: series[tributary[i]+"-"+type[j]+"-Year"],
+        y: series[tributary[i]+"-"+type[j]+"-Tons"],
+        error_y: {
+          type: 'data',
+          array: series[tributary[i]+"-"+type[j]+"-Sdev"],
+          visible: true
+        },
+        type: "bar",
+        opacity: 0.7,
+        legendgroup: colorPlot[j][0],
+        showlegend: legend,
+        name: type[j]+' vegetation',         
+        xaxis: 'x'+ axis,        
+        barmode: 'stack',
+        marker: {color: colorPlot[j][1]}, 
+      };
+      dataPlot.push(temp);
+    }
+            
+  }
+  console.log(dataPlot);
+  //'myData', "myDiv"
+  Plotly.newPlot(
+    "myDiv", dataPlot, layout,
+    {displayModeBar: false}
+  );   
+}
+makebars();
+
+window.onresize = function() {
+  Plotly.relayout(myDiv, {
+    width: 0.75 * window.innerWidth,
+    height: 0.75 * window.innerHeight
+  })
+}
+
+//Plotly.newPlot('myDiv', data, layout, {displayModeBar: false});
+
+</script>
+</body>
