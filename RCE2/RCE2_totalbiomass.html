@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <style>  
   #myDiv {
-    margin: 5%; /* From parent width */
+    margin: 2.5%; /* From parent width */
     style="margin-top: -50px;
     border: 1px solid black;
     justify-content: center;
@@ -89,25 +89,25 @@ function PlotBars(series){
     },
     xaxis: {
       type: 'category',
-      domain: [0.1, 0.25],
+      domain: [0.1, 0.35],
       anchor: 'x1',       
       title: 'Waal'
     },
     xaxis2: {
       type: 'category',
-      domain: [0.4, 0.55],
+      domain: [0.4, 0.65],
       anchor: 'x2', 
       title: 'Nederrijn-Lek'
     },
     xaxis3: {
       type: 'category',
-      domain: [0.70, 0.85],
+      domain: [0.70, 0.95],
       anchor: 'x3', 
       title: 'IJssel'
   },
   title:'Total biomass growth along the Dutch Rhine tributaries',
-  width: 0.75 * window.innerWidth,
-  height: 0.75 * window.innerHeight  
+  width: 0.80 * window.innerWidth,
+  height: 0.80 * window.innerHeight  
 }
   for (var i=0; i<tributary.length; i++) {
     for (var j=0; j<type.length; j++) {
@@ -150,8 +150,8 @@ makebars();
 
 window.onresize = function() {
   Plotly.relayout(myDiv, {
-    width: 0.75 * window.innerWidth,
-    height: 0.75 * window.innerHeight
+    width: 0.80 * window.innerWidth,
+    height: 0.80 * window.innerHeight
   })
 }
 
