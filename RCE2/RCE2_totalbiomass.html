@@ -106,8 +106,8 @@ function PlotBars(series){
       title: 'IJssel'
   },
   title:'Total biomass growth along the Dutch Rhine tributaries',
-  width: 1 * window.innerWidth,
-  height: 1 * window.innerHeight  
+  width: 0.80 * window.innerWidth,
+  height: 0.80 * window.innerHeight  
 }
   for (var i=0; i<tributary.length; i++) {
     for (var j=0; j<type.length; j++) {
@@ -150,8 +150,8 @@ makebars();
 
 window.onresize = function() {
   Plotly.relayout(myDiv, {
-    width: 1 * window.innerWidth,
-    height: 1 * window.innerHeight
+    width: 0.80 * window.innerWidth,
+    height: 0.80 * window.innerHeight
   })
 }
 
