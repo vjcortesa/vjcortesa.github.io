@@ -14,7 +14,7 @@
 </head>
 <body>
   <div id="mybtn" style="text-align: center;">
-    <h4>Total biomass growth over the years studied</h4>
+    <h5>Total biomass growth over the years </br>and tributaries studied</h5>
   </div>   
   <div id="myDiv" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
 <script>
@@ -87,9 +87,9 @@ function PlotBars(series){
     legend: {
         xanchor:"left",//"auto" | "left" | "center" | "right"
         yanchor:"bottom",//"auto" | "top" | "middle" | "bottom"
-        y:1.2,//number between or equal to -2 and 3
+        y:1.1,//number between or equal to -2 and 3
         x:0.1,//number between or equal to -2 and 3
-        orientation: "h" //"h" | "v"
+        orientation: "v" //"h" | "v"
     },    
     barmode: "stack",
     yaxis: {
