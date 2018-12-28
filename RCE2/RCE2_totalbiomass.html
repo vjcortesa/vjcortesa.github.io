@@ -2,7 +2,7 @@
 <meta charset="utf-8">
 <style>  
   #myDiv, #mybtn {
-    margin: 1.5%; /* From parent width */
+    margin: 3%; /* From parent width */
     justify-content: center;
     align-items: center;
     text-align: center;    
@@ -73,7 +73,13 @@ function PlotBars(series){
   var dataPlot = [];                                  
   var layout = {
     useResizeHandler: true,//https://codepen.io/nicolaskruchten/pen/ERgBZX
-    style: {width: "100%", height: "100%"},
+    style: {width: "100%", height: "100%"},    
+    margin: {
+    t: 0, //top margin
+    l: 20, //left margin
+    r: 20, //right margin
+    b: 20 //bottom margin
+    },
     //annotations: [{      
       //xref: 'paper',
       //yref: 'paper',
@@ -87,9 +93,9 @@ function PlotBars(series){
     legend: {
         xanchor:"left",//"auto" | "left" | "center" | "right"
         yanchor:"bottom",//"auto" | "top" | "middle" | "bottom"
-        y:1.1,//number between or equal to -2 and 3 1.1
+        y:1,//number between or equal to -2 and 3 1.1
         x:0.1,//number between or equal to -2 and 3
-        orientation: "h" //"h" | "v"
+        orientation: "v" //"h" | "v"
     },    
     barmode: "stack",
     yaxis: {
