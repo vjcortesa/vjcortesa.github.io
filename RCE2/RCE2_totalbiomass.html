@@ -4,12 +4,21 @@
 html, body {
   width: 80%;  
   height: 80%;
+  text-align: center;
+  margin: 0 auto;
 }
-  #myDiv, #mybtn {
-    /*margin: 1.5%; /* From parent width */
+  #myDiv {
+    /*margin: 1.5%;  From parent width */
+    display: block;
+    margin: 0 auto;
     /*justify-content: center;*/
     /*align-items: center;*/
     text-align: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%)
     /*position:relative;
     top: 50%;*/
   }
@@ -18,10 +27,7 @@ html, body {
 <head>
 <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
-<body>
-  <div id="mybtn">
-    <h6>Total biomass growth over the years </br>and tributaries studied</h6>
-  </div>   
+<body>  
   <div id="myDiv" align="center" style="width: 100%; height: 100%;"><!-- Plotly chart will be drawn inside this DIV --></div>
 <script>
 function makebars() {
@@ -83,9 +89,9 @@ function PlotBars(series){
     style: {width: "100%", height: "100%"},      
     margin: {
       l: 20,//default is 80px
-      r: 20,//default is 80px
+      r: 20//default is 80px
       //b: 50,//default is 80px To avoid overlapping with labels
-      t: 20//default is 80px
+      //t: 20//default is 80px
     },
     //annotations: [{      
       //xref: 'paper',
@@ -100,7 +106,7 @@ function PlotBars(series){
     legend: {
         xanchor:"left",//"auto" | "left" | "center" | "right"
         yanchor:"bottom",//"auto" | "top" | "middle" | "bottom"
-        y:1,//number between or equal to -2 and 3 1.1
+        y:0.9,//number between or equal to -2 and 3 1.1
         x:0.1,//number between or equal to -2 and 3
         orientation: "v" //"h" | "v"
     },    
@@ -128,7 +134,7 @@ function PlotBars(series){
       anchor: 'x3', 
       title: 'IJssel'
   },
-  title:false    
+  title:'Total biomass growth over the years and tributaries studied'   
 }
   for (var i=0; i<tributary.length; i++) {
     for (var j=0; j<type.length; j++) {
